@@ -1,0 +1,61 @@
+.movie-list {
+    display: grid; /* Utilise une grille pour la disposition */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Crée des colonnes de taille flexible */
+    gap: 50px; /* Espace entre les éléments */
+    margin: 30px 30px; /* Espacement vertical */
+  }
+  
+  .movie-card {
+    background-image: url(../images/affiche.jpg) !important;
+    background-size: cover;
+    border: 5px solid #ccc; /* Bordure autour de chaque film */
+    border-radius: 30px; /* Coins arrondis */
+    padding: 15px; /* Espacement à l'intérieur */
+    width: 200px; /* Ajuste la largeur selon tes besoins */
+    height: 300px; /* Ajuste la hauteur selon tes besoins */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Ombre légère pour donner du relief */
+    transition: transform 0.2s; /* Transition pour l'effet de survol */
+    cursor: pointer; /* Ajout d'un curseur pointer */
+  }
+ 
+.movie-card h3 {
+    text-align: center;
+}
+
+  .movie-card:hover {
+    transform: scale(1.05); /* Effet de zoom au survol */
+} 
+
+h2 {
+    text-align: center;
+}
+
+/* MovieList.css */
+input[type="text"] {
+    padding: 10px;
+    margin: 30px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 250px;
+    margin-left: 2%;
+  }
+  
+  button {
+    padding: 10px;
+    margin: 20px 10px;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+p {
+    font-size: xx-large;
+    text-align: center;
+    margin-top: 10%;
+}
