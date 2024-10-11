@@ -1,16 +1,39 @@
-// src/components/MovieList.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { movies } from '../data/movies'; // Liste des films
-import './MovieList.css'; // Ton fichier CSS pour le style
+import './MovieList.css';
+import { fetchMovies, fetchPopularMovies } from '../api'; // Importe la fonction pour récupérer les films populaires
 
 const MovieList = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState(''); // Stocke la valeur de recherche
-  const [filteredMovies, setFilteredMovies] = useState(movies); // Stocke les films filtrés
+  const [filteredMovies, setFilteredMovies] = useState([]); // Stocke les films filtrés
+
+  // Utiliser useEffect pour afficher les films populaires au début
+  useEffect(() => {
+    const getPopularMovies = async () => {
+      const popularMovies = await fetchPopularMovies(); // Appel à l'API pour récupérer les films populaires
+      setFilteredMovies(popularMovies); // Met à jour les films affichés par défaut
+    };
+
+    getPopularMovies(); // Appelle la fonction dès que le composant est monté
+  }, []);
 
   const handleClick = (id) => {
     navigate(`/movie/${id}`);
+  };
+
+  const handleSearch = async (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    if (value.trim() === '') {
+      const popularMovies = await fetchPopularMovies(); // Si la recherche est vide, afficher les films populaires
+      setFilteredMovies(popularMovies);
+      return;
+    }
+
+    const results = await fetchMovies(value); // Recherche des films en fonction de la saisie
+    setFilteredMovies(results);
   };
 
   return (
@@ -22,17 +45,7 @@ const MovieList = () => {
         type="text"
         placeholder="Rechercher un film"
         value={searchTerm}
-        onChange={(e) => {
-          setSearchTerm(e.target.value);
-          console.log("Valeur de recherche :", e.target.value); // Affiche la valeur de recherche
-          
-          // Filtre les films en fonction de la saisie
-          const results = movies.filter(movie =>
-            movie.title.toLowerCase().includes(e.target.value.toLowerCase())
-          );
-          console.log("Résultats filtrés :", results); // Affiche les résultats filtrés
-          setFilteredMovies(results); // Met à jour la liste des films filtrés
-        }}
+        onChange={handleSearch}
       />
 
       {/* Afficher un message si aucun film n'est trouvé */}
@@ -49,13 +62,13 @@ const MovieList = () => {
               <div
                 className="movie-image"
                 style={{
-                  backgroundImage: `url(${movie.poster})`, // Utiliser l'URL de l'affiche depuis l'objet movie
+                  backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})`,
                   backgroundPosition: 'center',
                   backgroundSize: 'cover',
-                  height: '300px', // Hauteur de l'image
+                  height: '300px',
                 }}
               />
-              <h3>{movie.title}</h3> {/* Titre en dessous de l'image */}
+              <h3>{movie.title}</h3>
             </div>
           ))}
         </div>

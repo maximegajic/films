@@ -1,16 +1,15 @@
 .movie-list {
     display: grid; /* Utilise une grille pour la disposition */
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Crée des colonnes de taille flexible */
-    gap: 50px; /* Espace entre les éléments */
+    gap: 80px; /* Espace entre les éléments */
+    row-gap: 100px;
     margin: 30px 30px; /* Espacement vertical */
   }
   
   .movie-card {
-    background-image: url(../images/affiche.jpg) !important;
-    background-size: cover;
-    border: 5px solid #ccc; /* Bordure autour de chaque film */
-    border-radius: 30px; /* Coins arrondis */
-    padding: 15px; /* Espacement à l'intérieur */
+/*     background-image: url(../images/affiche.jpg) !important;
+    background-size: cover; */
+    border: 5px solid #565555; /* Bordure autour de chaque film */
     width: 200px; /* Ajuste la largeur selon tes besoins */
     height: 300px; /* Ajuste la hauteur selon tes besoins */
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Ombre légère pour donner du relief */
