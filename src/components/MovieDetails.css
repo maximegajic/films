@@ -33,7 +33,6 @@ form {
   }
   
 
-/* src/components/MovieDetails.css */
 .existing-review {
     margin-top: 20px;
     padding: 10px;
@@ -51,3 +50,13 @@ p {
     margin-top: 2%;
     font-size: large;
   }
+
+.cast-list h3, li{
+    text-align: center;
+  }
+
+.cast-list ul {
+    list-style-type: none;
+    margin-left: -3%;
+
+}

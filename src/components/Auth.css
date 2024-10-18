@@ -1,0 +1,42 @@
+.auth-container {
+    display: flex;
+    flex-direction: column; /* Aligne les éléments verticalement */
+    align-items: center; /* Centre les éléments horizontalement */
+    gap: 5px; /* Espacement entre les éléments */
+    max-width: 80%; /* Limite la largeur du conteneur */
+    margin: auto; /* Centre le conteneur horizontalement */
+    padding: 30px; /* Ajoute un peu de rembourrage */
+}
+
+.logout-button {
+    position: relative;
+    border-radius: 5px;
+    background-color: rgb(172, 36, 36);
+    left: 35%;
+    top: 300%;
+}
+
+.login-button {
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.input-mail {
+    margin: 90px 10px;
+}
+
+.input-mdp {
+    margin: 10px;
+}
+
+.error-message {
+    color: red;
+    height: 20px; /* Hauteur fixe pour éviter le déplacement */
+    transition: opacity 0.3s; /* Transition douce pour l'apparition/disparition */
+    opacity: 0; /* Début invisible */
+    margin-bottom: 60px;
+}
+
+.error-message.visible {
+    opacity: 1; /* Rend visible le message d'erreur */
+}

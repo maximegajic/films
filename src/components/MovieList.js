@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+// src/components/MovieList.js
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MovieList.css';
 import { fetchMovies, fetchPopularMovies } from '../api'; // Importe la fonction pour récupérer les films populaires
+import { AuthContext } from '../context/authContext'; // Importe le contexte
+
 
 const MovieList = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState(''); // Stocke la valeur de recherche
   const [filteredMovies, setFilteredMovies] = useState([]); // Stocke les films filtrés
+  const { user } = useContext(AuthContext); // Utilise le contexte
 
   // Utiliser useEffect pour afficher les films populaires au début
   useEffect(() => {
@@ -21,6 +25,11 @@ const MovieList = () => {
   const handleClick = (id) => {
     navigate(`/movie/${id}`);
   };
+
+  const handleConnect = () => {
+    navigate('/auth'); // Redirige vers la page d'authentification
+  };
+
 
   const handleSearch = async (e) => {
     const value = e.target.value;
@@ -47,6 +56,26 @@ const MovieList = () => {
         value={searchTerm}
         onChange={handleSearch}
       />
+{!user ? (
+  <button 
+    type='button'
+    className='connect-button'
+    onClick={handleConnect}
+  >
+    Connexion
+  </button>
+) : (
+  <>
+    <button 
+      type='button'
+      className='connect-button'
+      onClick={handleConnect} // Assure-toi d'appeler la fonction de déconnexion ici
+    >
+      Connexion
+    </button>
+    <p>Connecté en tant que {user.email}</p>
+  </>
+)}
 
       {/* Afficher un message si aucun film n'est trouvé */}
       {filteredMovies.length === 0 ? (

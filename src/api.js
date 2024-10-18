@@ -40,3 +40,16 @@ export const fetchPopularMovies = async () => {
     });
     return response.data.results;
   };
+
+  // Récupérer les acteurs d'un film par son ID
+export const fetchMovieCredits = async (id) => {
+    const response = await axios.get(`${BASE_URL}/movie/${id}/credits`, {
+      params: {
+        api_key: API_KEY,
+      },
+    });
+    return response.data.cast; // Retourne la liste des acteurs
+  };
+
+  
+  

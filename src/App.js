@@ -5,6 +5,8 @@ import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 
 import MovieList from './components/MovieList';
 import MovieDetail from './components/MovieDetails';
+import Auth from './components/Auth'; // Adapte le chemin si nécessaire
+
 
 function App() {
   return (
@@ -16,6 +18,7 @@ function App() {
           <Route path="/" element={<MovieList />} />
           {/* Route dynamique pour afficher les détails d'un film */}
           <Route path="/movie/:id" element={<MovieDetail />} />
+          <Route path="/auth" element={<Auth />} /> 
         </Routes>
       </div>
     </Router>

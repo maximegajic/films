@@ -1,5 +1,5 @@
 // src/services/reviewService.js
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase'; // Importer Firestore
 
 // Fonction pour ajouter un avis
@@ -27,5 +27,15 @@ export const getReview = async (movieId) => {
     return docSnap.data(); // Retourne l'avis trouvé
   } else {
     return null; // Pas d'avis trouvé
+  }
+};
+
+// Fonction pour supprimer un avis
+export const removeReview = async (movieId) => {
+  try {
+    await deleteDoc(doc(db, "reviews", movieId.toString()));
+    console.log('Avis supprimé avec succès');
+  } catch (e) {
+    console.error("Erreur lors de la suppression de l'avis :", e);
   }
 };

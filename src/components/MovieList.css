@@ -1,3 +1,12 @@
+.connect-button {
+  color: white;
+  background-color: black;
+  position: relative;
+  left: 65%;
+  padding: 10px 30px;
+  border-radius: 5px;
+}
+
 .movie-list {
     display: grid; /* Utilise une grille pour la disposition */
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Crée des colonnes de taille flexible */
@@ -29,7 +38,8 @@ h2 {
     text-align: center;
 }
 
-/* MovieList.css */
+
+
 input[type="text"] {
     padding: 10px;
     margin: 30px 10px;
@@ -39,22 +49,10 @@ input[type="text"] {
     margin-left: 2%;
   }
   
-  button {
-    padding: 10px;
-    margin: 20px 10px;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
   
 p {
     font-size: xx-large;
     text-align: center;
     margin-top: 10%;
 }
+
