@@ -1,5 +1,9 @@
 /* src/components/MovieDetail.css */
 
+body {
+  background-color: rgb(131, 196, 205); /* Remplace par la couleur souhaitée */
+}
+
 form {
     margin-top: 20px;
   }
@@ -33,13 +37,49 @@ form {
   }
   
 
-.existing-review {
-    margin-top: 20px;
+  .existing-review {
+    position: relative;
+    max-width: 89%;
+    margin: 50px auto;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #f9f9f9;
-  }
+}
+
+.existing-review .review-rating {
+    text-align: left; 
+    margin: 10px 10px; /* Marges autour de la note */
+    font-size: large;
+}
+
+.existing-review .review-text {
+    text-align: center; /* Centrer le texte de l'avis */
+    margin: 20px auto; /* Marges en haut et en bas */
+    font-size: large;
+    word-wrap: break-word; /* Forcer les mots longs à retourner à la ligne */
+    max-width: 70%; /* Largeur maximale à 50 % pour le texte */
+}
+
+.existing-review .review-date {
+    position: absolute; /* Positionnement absolu */
+    bottom: 0px; /* Distance du bas */
+    left: 10px; /* Distance du coin gauche */
+    font-size: 14px;
+    color: #666; /* Style de la date */
+}
+
+.existing-review .remove-button {
+    position: absolute; /* Positionnement absolu */
+    bottom: 10px; /* Distance du bas */
+    right: 10px; /* Distance du coin droit */
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: rgb(213, 17, 17);
+}
+
+  
+  
   
 
 h2 {
@@ -60,3 +100,125 @@ p {
     margin-left: -3%;
 
 }
+.back-button {
+  position:absolute;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
+  padding: 5px;
+  left:10%;
+  top: 5%;
+}
+
+.back-button svg {
+  width: 24px;
+  height: 24px;
+  stroke: red;
+  transition: transform 0.2s;
+}
+
+.back-button:hover svg {
+  transform: scale(1.1);
+}
+
+.flex-container {
+  display: flex;
+  align-items: flex-start; /* Aligne en haut */
+  gap: 50px; /* Espace entre les colonnes */
+  padding-top: 2%;
+}
+
+.poster {
+  flex: 1; /* Largeur fixe pour l'affiche */
+  max-width: 200px; /* Ajuste la largeur de l'affiche */
+  padding-left: 5%;
+}
+
+.movie-details {
+  flex: 2; /* Largeur pour les détails */
+  margin-right: 8%;
+}
+
+.movie-poster {
+  width: 100%; /* Remplit la zone de l'affiche */
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre pour un effet */
+  border: 5px solid #565555; /* Bordure autour de chaque film */
+  left: 10px;
+}
+
+.empty-poster {
+  width: 200px; /* Ajustez la largeur selon vos besoins */
+  height: 300px; /* Ajustez la hauteur selon vos besoins */
+  border-radius: 5px; /* Coins arrondis */
+  display: flex; /* Utilisez flexbox pour centrer le texte */
+  justify-content: center; /* Centre horizontalement */
+  align-items: center; /* Centre verticalement */
+  background-color: #cbc3c3; /* Couleur de fond */
+  margin: 10px auto; /* Ajoute de l'espace autour */
+  border: 5px solid #565555; /* Bordure autour de chaque film */
+}
+
+
+/* Conteneur de l'avis pour un espacement et une disposition spécifiques */
+.review-container {
+  margin: 50px 0;
+  display: flex;
+  flex-direction: column; /* Les éléments seront empilés verticalement */
+  align-items: center; /* Centre les éléments horizontalement */
+}
+
+/* Style du label */
+.review-label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #333; /* Couleur du texte */
+}
+
+/* Style du champ de texte */
+.review-textarea {
+  max-width: 89%; /* Limite la largeur pour éviter qu'il soit trop large */
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #858383;
+  border-radius: 4px;
+  resize: vertical; /* Permet de redimensionner seulement en hauteur */
+  margin: 0 auto;
+  word-wrap: break-word; /* Force les mots longs à retourner à la ligne */
+}
+
+/* Effet de focus pour le champ */
+.review-textarea:focus {
+  border-color: #007bff; /* Change la bordure en bleu lors du focus */
+  outline: none; /* Supprime l'effet de contour par défaut */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Ajoute une légère ombre */
+}
+
+
+/* Conteneur pour la note et le bouton */
+.rating-container {
+  display: flex;
+  justify-content: space-between; /* Espace entre les éléments */
+  align-items: center; /* Alignement vertical centré */
+  margin: 20px auto; /* Espacement */
+  max-width: 40%; /* Limite la largeur maximale */
+
+}
+
+.rating-input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Espace entre le label et le champ de saisie */
+}
+
+/* Style pour le champ de note */
+.rating-container input {
+  width: 60px; /* Largeur fixe pour le champ de note */
+  margin-left: 10px; /* Espacement à gauche du champ */
+  text-align: center; /* Centre le texte à l'intérieur du champ */
+}
+
+
+

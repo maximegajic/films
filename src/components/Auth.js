@@ -4,6 +4,7 @@ import './Auth.css'
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth } from '../firebase'; // Importe l'authentification Firebase
 import { AuthContext } from '../context/authContext'; // Importe le contexte
+import { useNavigate } from 'react-router-dom'; // Permet de récupérer les paramètres d'URL
 
 const Auth = () => {
   const { user } = useContext(AuthContext); // Utilise le contexte
@@ -11,6 +12,7 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
 /*   const handleRegister = async () => {
     try {
@@ -26,6 +28,7 @@ const Auth = () => {
     } catch (error) {
       setError(error.message);
     }
+    navigate(`/`);
   };
 
   const handleLogout = async () => {
@@ -34,10 +37,16 @@ const Auth = () => {
     } catch (error) {
       setError(error.message);
     }
+    navigate(`/`);
   };
 
   return (
     <div className='auth-container'>
+       <button onClick={() => navigate(-1)} className="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+          <path d="M18 6L6 18M6 6l12 12" stroke="red" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </button>
       {user ? (
         <div>
           <p>Connecté en tant que {user.email}</p>

@@ -40,3 +40,25 @@
 .error-message.visible {
     opacity: 1; /* Rend visible le message d'erreur */
 }
+
+.back-button {
+    position: absolute;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 20px;
+    padding: 5px;
+    left: 5%;
+    top: 5%;
+  }
+  
+  .back-button svg {
+    width: 24px;
+    height: 24px;
+    stroke: red;
+    transition: transform 0.2s;
+  }
+  
+  .back-button:hover svg {
+    transform: scale(1.1);
+  }

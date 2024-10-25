@@ -62,7 +62,11 @@ const MovieList = () => {
     className='connect-button'
     onClick={handleConnect}
   >
-    Connexion
+      <img 
+    src={require('../images/user.webp')} // Remplace par le chemin de ton image
+    alt="Utilisateur"
+    className="button-image" // Ajoute une classe pour la styliser si nécessaire
+  />
   </button>
 ) : (
   <>
@@ -71,7 +75,11 @@ const MovieList = () => {
       className='connect-button'
       onClick={handleConnect} // Assure-toi d'appeler la fonction de déconnexion ici
     >
-      Connexion
+            <img 
+    src={require('../images/user.webp')} // Remplace par le chemin de ton image
+    alt="Utilisateur"
+    className="button-image" // Ajoute une classe pour la styliser si nécessaire
+  />
     </button>
     <p>Connecté en tant que {user.email}</p>
   </>
