@@ -62,3 +62,19 @@
   .back-button:hover svg {
     transform: scale(1.1);
   }
+
+  .stat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 30px;
+    margin-bottom: 50px;
+  }
+
+  .stat-container p {
+    font-size: x-large;
+  }
+
+  .stat-container ul {
+    font-size: x-large;
+  }

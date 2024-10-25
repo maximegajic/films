@@ -1,18 +1,21 @@
 // src/components/Auth.js
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './Auth.css'
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth } from '../firebase'; // Importe l'authentification Firebase
 import { AuthContext } from '../context/authContext'; // Importe le contexte
 import { useNavigate } from 'react-router-dom'; // Permet de récupérer les paramètres d'URL
+import { getReviewCount, calculateAverageRating, getTopRatedMovies } from '../services/reviewService'; // Importe la fonction pour récupérer le nombre d'avis
 
 const Auth = () => {
   const { user } = useContext(AuthContext); // Utilise le contexte
-  //const [registerMode, setRegisterMode] = useState(false); // Mode d'inscription ou de connexion
+  const [reviewCount, setReviewCount] = useState(0); // État pour le nombre d'avis
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [averageRating, setAverageRating] = useState(0);
+  const [topRatedMovies, setTopRatedMovies] = useState([]);
 
 /*   const handleRegister = async () => {
     try {
@@ -40,6 +43,23 @@ const Auth = () => {
     navigate(`/`);
   };
 
+  useEffect(() => {
+    const fetchdata = async () => {
+      const count = await getReviewCount(); // Récupère le nombre d'avis
+      setReviewCount(count); // Met à jour l'état
+      const avgRating = await calculateAverageRating();
+      const topMovies = await getTopRatedMovies();
+      setAverageRating(avgRating);
+      setTopRatedMovies(topMovies);
+    };
+    fetchdata();
+  }, [user]); // Appelle la fonction chaque fois que l'utilisateur change
+
+  // Fonction pour naviguer vers la page de détails du film
+  const handleMovieClick = (movieId) => {
+    navigate(`/movie/${movieId}`);
+  };
+
   return (
     <div className='auth-container'>
        <button onClick={() => navigate(-1)} className="back-button">
@@ -50,6 +70,18 @@ const Auth = () => {
       {user ? (
         <div>
           <p>Connecté en tant que {user.email}</p>
+          <div className='stat-container'>
+          <p>Nombre d'avis : {reviewCount}</p> {/* Affiche le nombre d'avis */}
+          <p>Note moyenne : {averageRating}</p> {/* Note moyenne */}
+          <p>Top 5 films les mieux notés:</p>
+          <ul>
+              {topRatedMovies.map((movie) => (
+                <li key={movie.movieId} onClick={() => handleMovieClick(movie.movieId)} style={{ cursor: 'pointer' }}>
+                  {movie.title} - {movie.rating} ⭐
+                </li>
+              ))}
+            </ul>
+      </div>
           <button 
           className='logout-button'
           onClick={handleLogout} 
