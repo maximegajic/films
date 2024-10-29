@@ -41,3 +41,8 @@
  h1 {
   text-align: center;
  }
+
+ header a {
+  text-decoration: none; /* Enlève le soulignement */
+  color: inherit; /* Prend la couleur du texte parent */
+}

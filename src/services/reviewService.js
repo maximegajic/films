@@ -102,3 +102,53 @@ export const getTopRatedMovies = async () => {
   // Attendez que toutes les promesses soient résolues
   return Promise.all(movieDetailsPromises);
 };
+
+export const getRatedMovies = async (sortBy) => {
+  const reviewsSnapshot = await getDocs(collection(db, "reviews")); // Récupère tous les avis
+  const movies = [];
+
+  reviewsSnapshot.forEach((doc) => {
+    movies.push({
+      movieId: doc.id, // Utilisez l'ID du document comme ID de film
+    });
+  });
+
+  const movieDetailsPromises = movies.map(async (movie) => {
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${movie.movieId}?api_key=ca1afb22f6a88b8a4cf40c42b2afac8b&language=en-US`);
+    const movieDetails = await response.json();
+    return {
+      movieId: movie.movieId,
+      title: movieDetails.title,        // Titre du film
+      rating: movieDetails.vote_average, // Note moyenne
+      releaseDate: movieDetails.release_date, // Date de sortie
+      popularity: movieDetails.popularity // Popularité
+    };
+  });
+
+  const ratedMovies = await Promise.all(movieDetailsPromises);
+
+  // Tri des films selon la méthode spécifiée
+  switch (sortBy) {
+    case 'note_average.desc':
+      ratedMovies.sort((a, b) => b.rating - a.rating);
+      break;
+    case 'note_average.asc':
+      ratedMovies.sort((a, b) => a.rating - b.rating);
+      break;
+    case 'release_date.desc':
+      ratedMovies.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
+      break;
+    case 'release_date.asc':
+      ratedMovies.sort((a, b) => new Date(a.releaseDate) - new Date(b.releaseDate));
+      break;
+    case 'popularity.asc':
+      ratedMovies.sort((a, b) => a.popularity - b.popularity);
+      break;
+    case 'popularity.desc':
+    default:
+      ratedMovies.sort((a, b) => b.popularity - a.popularity);
+      break;
+  }
+
+  return ratedMovies;
+};
