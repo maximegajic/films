@@ -73,6 +73,9 @@ const MovieList = () => {
       setActorSuggestions(suggestions);
     } else {
       setActorSuggestions([]);
+      const { movies, total_results } = await fetchAllMovies(page, sortBy, selectedGenres.join(','));
+      setFilteredMovies(movies);
+      setTotalPages(Math.min(500, total_results)); // Met à jour totalPages
     }
   };
 
