@@ -144,7 +144,7 @@ const MovieList = () => {
         value={searchActorTerm}
         onChange={handleActor}
       />
-      <button className='Actor-reset' onClick={handleActorReset} style={{backgroundColor:'red'}}>Réinitialiser l'acteur</button>
+      <button className='Actor-reset' onClick={handleActorReset} style={{backgroundColor:'grey'}}>Réinitialiser l'acteur</button>
 
       <select onChange={handleSortChange}>
   <option value="popularity.desc">Plus populaire</option>

@@ -5,6 +5,7 @@ import { auth } from '../firebase';
 import { AuthContext } from '../context/authContext';
 import { useNavigate } from 'react-router-dom';
 import { getReviewCount, calculateAverageRating, getTopRatedMovies } from '../services/reviewService';
+import { fetchGenres } from '../api';
 
 const Auth = () => {
   const { user } = useContext(AuthContext);
@@ -15,35 +16,44 @@ const Auth = () => {
   const navigate = useNavigate();
   const [averageRating, setAverageRating] = useState(0);
   const [topRatedMovies, setTopRatedMovies] = useState([]);
+  const [genres, setGenres] = useState('');
+  const [genresList, setGenresList] = useState([]);
 
-    // Utilisation de useCallback pour stabiliser la référence de handleLogin
-    const handleLogin = useCallback(
-      async (e) => {
-        if (e) e.preventDefault();
-        try {
-          await signInWithEmailAndPassword(auth, email, password);
-          navigate(`/`);
-        } catch (error) {
-          setError(error.message);
-        }
-      },
-      [email, password, navigate]
-    );
+  useEffect(() => {
+    const getGenres = async () => {
+      const genr = await fetchGenres();
+      setGenresList(genr);
+    };
 
- // Gestion globale de la touche "Entrée"
- useEffect(() => {
-  const handleEnterKey = (e) => {
-    if (e.key === 'Enter' && !user) {
-      handleLogin();
-    }
-  };
-  document.addEventListener('keydown', handleEnterKey);
-  return () => {
-    document.removeEventListener('keydown', handleEnterKey);
-  };
-}, [user, handleLogin]);
+    getGenres();
+  }, []);
 
+  // Utilisation de useCallback pour stabiliser la référence de handleLogin
+  const handleLogin = useCallback(
+    async (e) => {
+      if (e) e.preventDefault();
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        navigate(`/`);
+      } catch (error) {
+        setError(error.message);
+      }
+    },
+    [email, password, navigate]
+  );
 
+  // Gestion globale de la touche "Entrée"
+  useEffect(() => {
+    const handleEnterKey = (e) => {
+      if (e.key === 'Enter' && !user) {
+        handleLogin();
+      }
+    };
+    document.addEventListener('keydown', handleEnterKey);
+    return () => {
+      document.removeEventListener('keydown', handleEnterKey);
+    };
+  }, [user, handleLogin]);
 
   const handleLogout = async () => {
     try {
@@ -54,33 +64,37 @@ const Auth = () => {
     }
   };
 
+  // Ajout de genres à la liste des dépendances
   useEffect(() => {
     const fetchData = async () => {
       const count = await getReviewCount();
       setReviewCount(count);
       const avgRating = await calculateAverageRating();
-      const topMovies = await getTopRatedMovies();
+      const topMovies = await getTopRatedMovies(genres);
       setAverageRating(avgRating);
       setTopRatedMovies(topMovies);
     };
     fetchData();
-  }, [user]);
+  }, [user, genres]); // Ajout de genres ici
 
   const handleMovieClick = (movieId) => {
     navigate(`/movie/${movieId}`);
   };
 
-    // Appeler handleLogin si "Enter" est pressé
-    const handleKeyDown = (e) => {
-      console.log("coucou");
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        handleLogin(e);
-      }
-    };
+  const handleKeyDown = (e) => {
+    console.log("coucou");
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleLogin(e);
+    }
+  };
   
-
-    
+  const handleGenreChange = async (e) => {
+    const genreId = e.target.value;
+    setGenres(genreId);
+    const topMovies = await getTopRatedMovies(genreId);
+    setTopRatedMovies(topMovies);
+  };
 
   return (
     <div className='auth-container'>
@@ -95,7 +109,15 @@ const Auth = () => {
           <div className='stat-container'>
             <p>Nombre d'avis : {reviewCount}</p>
             <p>Note moyenne : {averageRating}</p>
-            <p>Top 5 films les mieux notés:</p>
+            <p>Top 5 films les mieux notés par genre:</p>
+            <select value={genres} onChange={handleGenreChange}>
+              <option value="">Tous les genres</option> {/* Option pour tous les genres */}
+              {genresList.map((genre) => (
+                <option key={genre.id} value={genre.id}>
+                  {genre.name}
+                </option>
+              ))}
+            </select>
             <ul>
               {topRatedMovies.map((movie) => (
                 <li key={movie.movieId} onClick={() => handleMovieClick(movie.movieId)} style={{ cursor: 'pointer' }}>

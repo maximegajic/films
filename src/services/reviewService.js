@@ -68,40 +68,59 @@ export const calculateAverageRating = async () => {
 
 
 
-// Fonction pour obtenir les 5 films les mieux notés
-export const getTopRatedMovies = async () => {
+// Fonction pour obtenir les 5 films les mieux notés par genre
+export const getTopRatedMovies = async (genreId) => {
   const reviewsSnapshot = await getDocs(collection(db, "reviews")); // Récupère tous les avis
   const movies = [];
 
   reviewsSnapshot.forEach((doc) => {
     const data = doc.data();
-    
+
     movies.push({
       movieId: doc.id, // Utilisez l'ID du document comme ID de film
       rating: data.rating,
     });
   });
 
-  // Trie les films par note de manière décroissante
-  movies.sort((a, b) => b.rating - a.rating);
-
-  // Limite aux 5 premiers films
-  const topMovies = movies.slice(0, 5);
-
-  // Récupération des titres depuis l'API TMDB
-  const movieDetailsPromises = topMovies.map(async (movie) => {
+  const movieDetailsPromises = movies.map(async (movie) => {
     const response = await fetch(`https://api.themoviedb.org/3/movie/${movie.movieId}?api_key=ca1afb22f6a88b8a4cf40c42b2afac8b&language=en-US`);
     const movieDetails = await response.json();
-    return {
+    
+    // Si genreId est une chaîne vide, retourne le film sans tester les genres
+    if (!genreId) {
+      return {
+        movieId: movie.movieId,
+        title: movieDetails.title,
+        rating: movie.rating,
+      };
+    }
+    
+    // Vérifie si le film appartient au genre spécifié
+    const isGenreMatch = movieDetails.genres.some(genre => genre.id === parseInt(genreId));
+    console.log('Genre ID:', genreId, 'Movie Genres:', movieDetails.genres.map(genre => genre.id), 'Match:', isGenreMatch);
+  
+    return isGenreMatch ? {
       movieId: movie.movieId,
-      title: movieDetails.title, // Ajoutez le titre du film
+      title: movieDetails.title,
       rating: movie.rating,
-    };
+    } : null;
   });
+  
 
-  // Attendez que toutes les promesses soient résolues
-  return Promise.all(movieDetailsPromises);
+  // Attendre que toutes les promesses soient résolues
+  const ratedMovies = await Promise.all(movieDetailsPromises);
+
+  // Filtrer les films qui ne sont pas nuls
+  const filteredRatedMovies = ratedMovies.filter(movie => movie !== null);
+
+  // Trie les films par note de manière décroissante
+  filteredRatedMovies.sort((a, b) => b.rating - a.rating);
+  console.log(filteredRatedMovies.slice(0, 5));
+
+  // Limite aux 5 premiers films
+  return filteredRatedMovies.slice(0, 5);
 };
+
 
 export const getRatedMovies = async (sortBy) => {
   const reviewsSnapshot = await getDocs(collection(db, "reviews")); // Récupère tous les avis
