@@ -9,9 +9,10 @@ export const FilterProvider = ({ children }) => {
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState('popularity.desc'); // Valeur par défaut pour le tri
   const [selectedGenres, setSelectedGenres] = useState([]); // Stocke les genres sélectionnés
+  const [selectedActorId, setSelectedActorId] = useState(null);
 
   return (
-    <FilterContext.Provider value={{ page, setPage, sortBy, setSortBy, selectedGenres, setSelectedGenres }}>
+    <FilterContext.Provider value={{ page, setPage, sortBy, setSortBy, selectedGenres, setSelectedGenres, selectedActorId, setSelectedActorId }}>
       {children}
     </FilterContext.Provider>
   );

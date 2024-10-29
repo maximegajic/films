@@ -10,10 +10,9 @@ const MovieList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchActorTerm, setSearchActorTerm] = useState('');
   const [actorSuggestions, setActorSuggestions] = useState([]);
-  const [selectedActorId, setSelectedActorId] = useState(null);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const { user } = useContext(AuthContext);
-  const { page, setPage, sortBy, setSortBy, selectedGenres, setSelectedGenres } = useContext(FilterContext);
+  const { page, setPage, sortBy, setSortBy, selectedGenres, setSelectedGenres, selectedActorId, setSelectedActorId } = useContext(FilterContext);
   const [genresList, setGenresList] = useState([]);
   const [totalPages, setTotalPages] = useState(0); // Nombre total de pages
 
