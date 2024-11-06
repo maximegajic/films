@@ -60,6 +60,8 @@ const MovieDetail = () => {
     return <p>Film non trouvé</p>;
   }
 
+  
+
   return (
 <div>
   <button onClick={() => navigate(-1)} className="back-button">

@@ -10,9 +10,11 @@ export const FilterProvider = ({ children }) => {
   const [sortBy, setSortBy] = useState('popularity.desc'); // Valeur par défaut pour le tri
   const [selectedGenres, setSelectedGenres] = useState([]); // Stocke les genres sélectionnés
   const [selectedActorId, setSelectedActorId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchActorTerm, setSearchActorTerm] = useState('');
 
   return (
-    <FilterContext.Provider value={{ page, setPage, sortBy, setSortBy, selectedGenres, setSelectedGenres, selectedActorId, setSelectedActorId }}>
+    <FilterContext.Provider value={{ page, setPage, sortBy, setSortBy, selectedGenres, setSelectedGenres, selectedActorId, setSelectedActorId, searchTerm, setSearchTerm, searchActorTerm, setSearchActorTerm }}>
       {children}
     </FilterContext.Provider>
   );

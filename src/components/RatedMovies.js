@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './MovieList.css';
-import { fetchMovies, fetchAllMovies, fetchGenres, fetchActorSuggestions, fetchMoviesByActor } from '../api';
+import './RatedMovies.css';
+import { fetchGenres } from '../api';
 import { AuthContext } from '../context/authContext';
-import { FilterContext } from '../context/FilterContext';
+import { FilterContextR } from '../context/FilterContextR';
+import { getRatedMovies } from '../services/reviewService';
 
-const MovieList = () => {
+const RatedMovies = () => {
   const navigate = useNavigate();
-  const [actorSuggestions, setActorSuggestions] = useState([]);
+  /* const [searchTerm, setSearchTerm] = useState(''); */
   const [filteredMovies, setFilteredMovies] = useState([]);
   const { user } = useContext(AuthContext);
-  const { page, setPage, sortBy, setSortBy, selectedGenres, setSelectedGenres, selectedActorId, setSelectedActorId, searchTerm, setSearchTerm, searchActorTerm, setSearchActorTerm } = useContext(FilterContext);
+  const { page, setPage, sortBy, setSortBy, selectedGenres, setSelectedGenres} = useContext(FilterContextR);
   const [genresList, setGenresList] = useState([]);
   const [totalPages, setTotalPages] = useState(0); // Nombre total de pages
 
@@ -25,22 +26,13 @@ const MovieList = () => {
 
   useEffect(() => {
     const getMovies = async () => {
-      if (searchTerm.trim() !== '') {
-        // Appelle `fetchMovies` si `searchTerm` a une valeur
-        const { movies, total_results } = await fetchMovies(searchTerm);
-        setFilteredMovies(movies);
-        setTotalPages(Math.min(500, total_results));
-      } else {
-        // Sinon, utilise `fetchAllMovies`
-        const { movies, total_results } = await fetchAllMovies(page, sortBy, selectedGenres.join(','), selectedActorId);
-        setFilteredMovies(movies);
-        setTotalPages(Math.min(500, total_results));
-      }
+      const { movies, total_results } = await getRatedMovies(page, sortBy, selectedGenres.join(',')); // Envoie les genres sélectionnés
+      setFilteredMovies(movies);
+      setTotalPages(Math.min(500,total_results)); // Met à jour totalMovies
     };
-  
+
     getMovies();
-  }, [page, sortBy, selectedGenres, selectedActorId, searchTerm]); // Ajoute `searchTerm` dans les dépendances
-  
+  }, [page, sortBy, selectedGenres]);
 
 
 
@@ -52,68 +44,23 @@ const MovieList = () => {
     navigate('/auth');
   };
 
-  const handleSearch = async (e) => {
+/*   const handleSearch = async (e) => {
     const value = e.target.value;
     setSearchTerm(value);
 
     if (value.trim() === '') {
-      const { movies, total_results } = await fetchAllMovies(page, sortBy, selectedGenres.join(',')); // Utilise les genres sélectionnés
+      const { movies, total_results } = await getRatedMovies(page, sortBy, selectedGenres.join(',')); 
       setFilteredMovies(movies);
-      setTotalPages(Math.min(500,total_results)); // Met à jour totalMovies
-      return;
+      setTotalPages(Math.min(500,total_results)); 
     }
 
     const { movies, total_results } = await fetchMovies(value);
+    console.log(movies);
     setFilteredMovies(movies);
-    setTotalPages(Math.min(500,total_results)); // Met à jour totalMovies
-  };
+    setTotalPages(Math.min(500,total_results)); 
+  }; */
 
 
-  const handleActor = async (e) => {
-    const value = e.target.value;
-    setSearchActorTerm(value);
-    setSelectedActorId(null);  // Réinitialise l'ID de l'acteur sélectionné
-    
-    // Si le champ est vide, efface les suggestions et récupère tous les films
-    if (value === '') {
-      setActorSuggestions([]); // Efface les suggestions d'acteurs
-      const { movies, total_results } = await fetchAllMovies(page, sortBy, selectedGenres.join(','));
-      setFilteredMovies(movies);
-      setTotalPages(Math.min(500, total_results)); // Met à jour le total des pages
-    } else {
-      // Si le champ contient un nom, récupère les suggestions d'acteurs
-      const suggestions = await fetchActorSuggestions(value);
-      setActorSuggestions(suggestions);
-    }
-  };
-  
-
-  const handleActorSelect = async (actor) => {
-    setSelectedActorId(actor.id);
-    setSearchActorTerm(actor.name);
-    setActorSuggestions([]);
-    
-    const { movies, total_results } = await fetchMoviesByActor(
-      actor.id,  // Utilise l'ID de l'acteur directement ici
-      false,
-      1,
-      selectedGenres.join(','),
-      sortBy
-    );
-    
-    setFilteredMovies(movies);
-    setTotalPages(Math.min(500, total_results)); 
-    setPage(1);
-  };
-
-  const handleActorReset = async () => {
-    setSelectedActorId(null);  // Réinitialise l'acteur sélectionné
-    setSearchActorTerm('');    // Efface le terme de recherche
-    const { movies, total_results } = await fetchAllMovies(page, sortBy, selectedGenres.join(','));
-    setFilteredMovies(movies);
-    setTotalPages(Math.min(500, total_results));
-  };
-  
 
   const handleSortChange = (e) => {
     setSortBy(e.target.value);
@@ -138,30 +85,27 @@ const MovieList = () => {
     }
   };
 
-  const handleRatedMovies = () => {
-    navigate('/rated');
-  };
 
   return (
-    <div>   
+    <div>
+      <button onClick={() => navigate(-1)} className="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+          <path d="M18 6L6 18M6 6l12 12" stroke="red" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </button>  
       {user && <p>Connecté en tant  que {user.email}</p>}
-      <input
+      <h2>Films ayant un avis</h2>
+{/*       <input
         type="text"
         placeholder="Rechercher un film"
         value={searchTerm}
         onChange={handleSearch}
-      />
+      /> */}
 
-<input
-        type="text"
-        placeholder="Rechercher un acteur"
-        value={searchActorTerm}
-        onChange={handleActor}
-      />
-      <button className='Actor-reset' onClick={handleActorReset} style={{backgroundColor:'grey'}}>Réinitialiser l'acteur</button>
 
-      <select onChange={handleSortChange}>
-  <option value="popularity.desc">Plus populaire</option>
+
+  <select className='tri-button' onChange={handleSortChange}>
+        <option value="popularity.desc">Plus populaire</option>
         <option value="popularity.asc">Moins populaire</option>
         <option value="release_date.desc">Plus récent</option>
         <option value="release_date.asc">Moins récent</option>
@@ -169,32 +113,8 @@ const MovieList = () => {
         <option value="vote_average.asc">Moins bien noté</option>
   </select>
 
-  <button type='button' className='button-rated' onClick={handleRatedMovies}>
-Voir uniquement les films évalués
-          </button>
 
-{/* Affichage des suggestions d’acteurs */}
 
-{actorSuggestions.length > 0 && (
-    <ul className="actor-suggestions">
-        {actorSuggestions.map((actor) => (
-          actor.profile_path &&
-          <li key={actor.id} onClick={() => handleActorSelect(actor)}>
-          <img 
-              src={actor.profile_path ? `https://image.tmdb.org/t/p/w500/${actor.profile_path}` : '../images/tete.jpg'} 
-              alt={actor.name} 
-              className="actor-image" 
-              onError={(e) => {
-                  e.target.onerror = null; // Évite une boucle infinie
-                  e.target.src = '../images/tete.jpg'; // Charge l'image par défaut si une erreur se produit
-              }}
-              style={{ width: '30px', height: '30px', marginRight: '10px', borderRadius: '50%' }}
-          />
-          <span>{actor.name}</span>
-      </li>
-  ))}
-</ul>
-)}
 
 
       
@@ -290,4 +210,4 @@ Voir uniquement les films évalués
   );
 };
 
-export default MovieList;
+export default RatedMovies;

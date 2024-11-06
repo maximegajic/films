@@ -122,52 +122,74 @@ export const getTopRatedMovies = async (genreId) => {
 };
 
 
-export const getRatedMovies = async (sortBy) => {
+export const getRatedMovies = async (page, sortBy, genreId) => {
   const reviewsSnapshot = await getDocs(collection(db, "reviews")); // Récupère tous les avis
   const movies = [];
 
   reviewsSnapshot.forEach((doc) => {
     movies.push({
       movieId: doc.id, // Utilisez l'ID du document comme ID de film
+      personalRating: doc.data().rating, // Récupère la note personnelle de la base de données
     });
   });
 
   const movieDetailsPromises = movies.map(async (movie) => {
     const response = await fetch(`https://api.themoviedb.org/3/movie/${movie.movieId}?api_key=ca1afb22f6a88b8a4cf40c42b2afac8b&language=en-US`);
     const movieDetails = await response.json();
-    return {
-      movieId: movie.movieId,
-      title: movieDetails.title,        // Titre du film
-      rating: movieDetails.vote_average, // Note moyenne
-      releaseDate: movieDetails.release_date, // Date de sortie
-      popularity: movieDetails.popularity // Popularité
-    };
+
+    // Si genreId est une chaîne vide, retourne le film sans tester les genres
+    if (!genreId) {
+      return {
+        id: movieDetails.id,
+        title: movieDetails.title,
+        rating: movie.personalRating, // Utilise la note personnelle
+        releaseDate: movieDetails.release_date,
+        popularity: movieDetails.popularity,
+        poster_path: movieDetails.poster_path, // URL de l'affiche
+      };
+    }
+    
+    // Vérifie si le film appartient au genre spécifié
+    const isGenreMatch = movieDetails.genres.some(genre => genre.id === parseInt(genreId));
+  
+    return isGenreMatch ? {
+      id: movieDetails.id,
+      title: movieDetails.title,
+      rating: movie.personalRating, // Utilise la note personnelle
+      releaseDate: movieDetails.release_date,
+      popularity: movieDetails.popularity,
+      poster_path: movieDetails.poster_path, // URL de l'affiche
+    } : null;
   });
 
   const ratedMovies = await Promise.all(movieDetailsPromises);
+  const filteredMovies = ratedMovies.filter(movie => movie !== null);
 
-  // Tri des films selon la méthode spécifiée
-  switch (sortBy) {
-    case 'note_average.desc':
-      ratedMovies.sort((a, b) => b.rating - a.rating);
-      break;
-    case 'note_average.asc':
-      ratedMovies.sort((a, b) => a.rating - b.rating);
-      break;
-    case 'release_date.desc':
-      ratedMovies.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
-      break;
-    case 'release_date.asc':
-      ratedMovies.sort((a, b) => new Date(a.releaseDate) - new Date(b.releaseDate));
-      break;
-    case 'popularity.asc':
-      ratedMovies.sort((a, b) => a.popularity - b.popularity);
-      break;
-    case 'popularity.desc':
-    default:
-      ratedMovies.sort((a, b) => b.popularity - a.popularity);
-      break;
+  // Tri selon la note personnelle
+  if (sortBy === 'vote_average.desc') {
+    filteredMovies.sort((a, b) => b.rating - a.rating);
+  } else if (sortBy === 'vote_average.asc') {
+    filteredMovies.sort((a, b) => a.rating - b.rating);
+  } else if (sortBy === 'release_date.desc') {
+    filteredMovies.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
+  } else if (sortBy === 'release_date.asc') {
+    filteredMovies.sort((a, b) => new Date(a.releaseDate) - new Date(b.releaseDate));
+  } else if (sortBy === 'popularity.asc') {
+    filteredMovies.sort((a, b) => a.popularity - b.popularity);
+  } else {
+    filteredMovies.sort((a, b) => b.popularity - a.popularity);
   }
 
-  return ratedMovies;
+  const startIndex = (page - 1) * 20;
+  const paginatedMovies = filteredMovies.slice(startIndex, startIndex + 20);
+
+  return {
+    total_results: Math.ceil(filteredMovies.length / 20),
+    movies: paginatedMovies
+  };
 };
+
+
+
+
+

@@ -127,8 +127,12 @@ p {
   margin-right: 50px;
 }
 
-.button-rated {
-  background-color: #1d7032;
-  margin-left: 5%;
+.tri-button {
+  position: relative;
+  margin-left: 46%;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
+
+
 
