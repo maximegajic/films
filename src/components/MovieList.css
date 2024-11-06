@@ -5,7 +5,7 @@
   padding: 0;
   cursor: pointer;
   right:2%;
-  top: 10%;
+  top: 5%;
 }
 
 
@@ -85,7 +85,7 @@ p {
 
 .pagination-buttons button {
   font-weight: bold;
-  background-color: #bb4720; /* Couleur d'arrière-plan pour le bouton actif */
+  background-color: #20b3bb; /* Couleur d'arrière-plan pour le bouton actif */
   color: white; /* Couleur du texte pour le bouton actif */
   height: 40px;
   width: 80px;
@@ -123,12 +123,9 @@ p {
   background-color: #f0f0f0; /* Change l'arrière-plan au survol */
 }
 
-.Actor-reset {
-  margin-right: 50px;
-}
 
 .button-rated {
-  background-color: #1d7032;
-  margin-left: 5%;
+  background-color: #0e6e6f;
+  margin-left: 100px;
 }
 

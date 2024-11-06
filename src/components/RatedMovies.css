@@ -85,7 +85,7 @@ p {
 
 .pagination-buttons button {
   font-weight: bold;
-  background-color: #bb4720; /* Couleur d'arrière-plan pour le bouton actif */
+  background-color: #20b3bb; /* Couleur d'arrière-plan pour le bouton actif */
   color: white; /* Couleur du texte pour le bouton actif */
   height: 40px;
   width: 80px;

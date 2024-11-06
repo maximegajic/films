@@ -94,7 +94,7 @@ const RatedMovies = () => {
         </svg>
       </button>  
       {user && <p>Connecté en tant  que {user.email}</p>}
-      <h2>Films ayant un avis</h2>
+      <h2>Mes avis</h2>
 {/*       <input
         type="text"
         placeholder="Rechercher un film"

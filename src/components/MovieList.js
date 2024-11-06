@@ -105,14 +105,6 @@ const MovieList = () => {
     setTotalPages(Math.min(500, total_results)); 
     setPage(1);
   };
-
-  const handleActorReset = async () => {
-    setSelectedActorId(null);  // Réinitialise l'acteur sélectionné
-    setSearchActorTerm('');    // Efface le terme de recherche
-    const { movies, total_results } = await fetchAllMovies(page, sortBy, selectedGenres.join(','));
-    setFilteredMovies(movies);
-    setTotalPages(Math.min(500, total_results));
-  };
   
 
   const handleSortChange = (e) => {
@@ -157,8 +149,8 @@ const MovieList = () => {
         placeholder="Rechercher un acteur"
         value={searchActorTerm}
         onChange={handleActor}
+        style={{marginRight:'100px'}}
       />
-      <button className='Actor-reset' onClick={handleActorReset} style={{backgroundColor:'grey'}}>Réinitialiser l'acteur</button>
 
       <select onChange={handleSortChange}>
   <option value="popularity.desc">Plus populaire</option>
